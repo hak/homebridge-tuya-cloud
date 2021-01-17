@@ -40,6 +40,14 @@
         "type": "string",
         "required": true,
         "default": ""
+      },
+      "deviceList": {
+        "title": "Device list",
+        "type": "array",
+        "items": {
+          "title": "deviceID",
+          "type": "string"
+        }
       }
     }
   }
