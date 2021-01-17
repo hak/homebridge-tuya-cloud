@@ -28,6 +28,18 @@
             "enum": ["https://openapi.tuyacn.com"]
           }
         ]
+      },
+      "clientID": {
+        "title": "clientID",
+        "type": "string",
+        "required": true,
+        "default": ""
+      },
+      "secret": {
+        "title": "secret",
+        "type": "string",
+        "required": true,
+        "default": ""
       }
     }
   }

@@ -1,7 +1,7 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
-
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { ExamplePlatformAccessory } from './platformAccessory';
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 /**
  * TuyaCloudHomebridgePlatform
@@ -14,12 +14,14 @@ export class TuyaCloudHomebridgePlatform implements DynamicPlatformPlugin {
   // this is used to track restored cached accessories
   public readonly accessories: PlatformAccessory[] = [];
 
+  private sha256 = require('js-sha256');
+  private accessToken: string = "";
+
   constructor(
     public readonly log: Logger,
     public readonly config: PlatformConfig,
     public readonly api: API,
   ) {
-    this.log.debug('API access point:', this.config.url);
 
     // When this event is fired it means Homebridge has restored all cached accessories from disk.
     // Dynamic Platform plugins should only register new accessories after this event was fired,
@@ -27,11 +29,65 @@ export class TuyaCloudHomebridgePlatform implements DynamicPlatformPlugin {
     // to start discovery of new accessories.
     this.api.on('didFinishLaunching', () => {
       log.debug('Executed didFinishLaunching callback');
-      // run the method to discover / register your devices as accessories
-      this.discoverDevices();
+      this.refreshToken();
+    });
+
+  }
+
+  private delay(t): Promise<void> {
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, t);
     });
   }
 
+  private calc_sign(message: string, key: string): string {
+    let sign = "";
+    return this.sha256.hmac.update(key, message).hex().toUpperCase();
+  }
+
+  private async refreshToken(retryingAfterError = false): Promise<string> {
+    this.log.debug('API access point:', this.config.url);
+
+    let base = this.config.url;
+    let url = "/v1.0/token?grant_type=1";
+    let t = Math.round(Date.now());
+    var data = (
+      await axios({
+        headers: {
+          "client_id": this.config.clientID,
+          "secret": this.config.secret,
+          "sign": this.calc_sign(this.config.clientID + t, this.config.secret),
+          "t": t.toString(),
+          "sign_method": "HMAC-SHA256"
+        },
+        url: url,
+        baseURL: this.config.url,
+        data: "",
+        method: "GET"
+      })
+    ).data;
+
+    this.log.debug(`Response:${JSON.stringify(data.data)}`);
+    if (data.responseStatus === "error") {
+      this.log.error("Error retrieving the access token.");
+      await this.delay(65 * 1000);
+      this.log?.info("Retrying authentication after previous error.");
+      return this.refreshToken(true);
+    }
+    
+    this.accessToken = data.data.access_token;
+  
+    // run the method to discover / register your devices as accessories
+    this.discoverDevices();
+
+    setTimeout(() => {
+      this.refreshToken();
+    }, (data.data.expire_time - 60 * 60) * 1000);
+
+    return "";
+  }
   /**
    * This function is invoked when homebridge restores cached accessories from disk at startup.
    * It should be used to setup event handlers for characteristics and update respective values.
