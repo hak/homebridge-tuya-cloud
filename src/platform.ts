@@ -95,8 +95,8 @@ export class TuyaCloudHomebridgePlatform implements DynamicPlatformPlugin {
     this.discoverDevices();
 
     setTimeout(() => {
-//      this.refreshToken();
-    }, (data.result.expire_time - 60 * 60) * 1000);
+      this.refreshToken();
+    }, (data.result.expire_time / 2) * 1000);
 
     return "";
   }
