@@ -1,16 +1,16 @@
 {
   "private": true,
-  "displayName": "Plugin Name",
-  "name": "homebridge-plugin-name",
+  "displayName": "Tuya Cloud Plugin",
+  "name": "homebridge-plugin-tuyacloud",
   "version": "1.0.0",
-  "description": "A short description about what your plugin does.",
+  "description": "Control IoT devices using Tuya Cloud API.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/USERNAME/GITHUB_PROJECT_NAME.git"
+    "url": "git://github.com/hak/homebridge-tuya-cloud.git"
   },
   "bugs": {
-    "url": "https://github.com/USERNAME/GITHUB_PROJECT_NAME/issues"
+    "url": "https://github.com/hak/homebridge-tuya-cloud/issues"
   },
   "engines": {
     "node": ">=10.17.0",
@@ -37,5 +37,7 @@
     "rimraf": "^3.0.2",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5"
-  }
+  },
+  "homepage": "https://github.com/hak/homebridge-tuya-cloud#readme",
+  "author": "Hak Matsuda"
 }

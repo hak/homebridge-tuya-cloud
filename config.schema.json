@@ -1,15 +1,33 @@
 {
-  "pluginAlias": "ExampleHomebridgePlugin",
+  "pluginAlias": "TuyaCloudHomebridgePlugin",
   "pluginType": "platform",
   "singular": true,
   "schema": {
     "type": "object",
     "properties": {
-      "name": {
-        "title": "Name",
+      "url": {
+        "title": "Region",
         "type": "string",
         "required": true,
-        "default": "Example Dynamic Platform"
+        "default": "https://openapi.tuyaus.com",
+        "oneOf": [
+          {
+            "title": "USA",
+            "enum": ["https://openapi.tuyaus.com"]
+          },
+          {
+            "title": "Europe",
+            "enum": ["https://openapi.tuyaeu.com"]
+          },
+          {
+            "title": "India",
+            "enum": ["https://openapi.tuyain.com"]
+          },
+          {
+            "title": "China",
+            "enum": ["https://openapi.tuyacn.com"]
+          }
+        ]
       }
     }
   }
