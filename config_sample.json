@@ -1,0 +1,31 @@
+{
+    "bridge": {
+        "name": "Homebridge",
+        "username": "CC:22:3D:E3:CE:30",
+        "manufacturer": "homebridge.io",
+        "model": "homebridge",
+        "port": 51826,
+        "pin": "031-45-154"
+    },
+    "platforms": [
+        {
+            "platform": "config",
+            "name": "Config",
+            "port": 8080,
+            "sudo": false
+        },
+        {
+            "url": "https://openapi.tuyaus.com",
+            "clientID": "YOUR CLOUD PROJECT CLIENT ID",
+            "secret": "YOUR CLOUD PROJECT SECRET",
+            "deviceList": [
+                "YOUR DEVICE ID"
+            ],
+            "platform": "TuyaCloudHomebridgePlugin"
+        }
+    ],
+    "accessories": [
+        {
+        }
+    ]
+}
